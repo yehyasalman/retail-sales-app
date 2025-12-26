@@ -8,7 +8,7 @@ genai.configure(api_key="AIzaSyAORjfxuka1FCEgZlxMyG0HDIytesPyoqw")
 st.title("Ask Questions About Retail Sales Data")
 
 # Load your dataset
-df = pd.read_csv("sales_data.csv")
+df = pd.read_csv(r'C:\Downloads\3abousi\retail_store_sales.csv')
 
 st.write("Preview of your data:")
 st.dataframe(df.head())
@@ -37,6 +37,7 @@ if st.button("Get Answer") and user_question:
 
     st.write("Answer:")
     st.write(response.text)
+
 
 
 
