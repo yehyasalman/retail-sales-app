@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import google as genai
+import google.generativeai as genai
 
 # Configure your API key (set as environment variable for safety)
 genai.configure(api_key="AIzaSyAORjfxuka1FCEgZlxMyG0HDIytesPyoqw")
@@ -37,5 +37,6 @@ if st.button("Get Answer") and user_question:
 
     st.write("Answer:")
     st.write(response.text)
+
 
 
