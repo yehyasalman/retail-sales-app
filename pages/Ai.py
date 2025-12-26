@@ -3,7 +3,7 @@ import pandas as pd
 import google as genai
 
 # Configure your API key (set as environment variable for safety)
-genai.configure(api_key="YOUR_GOOGLE_API_KEY")
+genai.configure(api_key="AIzaSyAORjfxuka1FCEgZlxMyG0HDIytesPyoqw")
 
 st.title("Ask Questions About Retail Sales Data")
 
@@ -37,4 +37,5 @@ if st.button("Get Answer") and user_question:
 
     st.write("Answer:")
     st.write(response.text)
+
 
