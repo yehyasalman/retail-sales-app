@@ -1,17 +1,18 @@
 import streamlit as st
 import pandas as pd
 import google.generativeai as genai
+import os
 
-# Configure your API key (set as environment variable for safety)
-genai.configure(api_key="AIzaSyAORjfxuka1FCEgZlxMyG0HDIytesPyoqw")
+# Configure API key securely (set in Streamlit secrets or environment)
+genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 st.title("Ask Questions About Retail Sales Data")
 
-# Load your dataset
-df = pd.read_csv('retail_store_sales.csv')
+# Load your dataset (make sure this file is in your repo)
+df = pd.read_csv("retail_store_sales.csv")
 
 st.write("Preview of your data:")
-st.dataframe(df.head())
+st.dataframe(df)
 
 # User question
 user_question = st.text_area("Ask a question about the data:")
@@ -37,8 +38,3 @@ if st.button("Get Answer") and user_question:
 
     st.write("Answer:")
     st.write(response.text)
-
-
-
-
-
