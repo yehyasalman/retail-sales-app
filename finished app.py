@@ -47,7 +47,6 @@ input_data = {
     "month": month,
     "weekday": weekday,
     "Price Per Unit": price_per_unit,
-    "Quantity": 4,
     "Discount Applied": discount_applied,
     "Item": "Unknown"
 }
