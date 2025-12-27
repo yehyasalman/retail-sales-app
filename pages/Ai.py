@@ -20,13 +20,13 @@ def chatbot_response(user_input):
     # Define intents with fuzzy keywords
     intents = {
         "top_category": ["top category", "best category", "popular category"],
-        "avg_price": ["average price", "mean price", "unit price"],
-        "discount": ["discount", "rebate", "offer", "promotion"],
-        "payment": ["payment", "pay method", "transaction type"],
-        "location": ["location", "store", "branch"],
-        "weekday": ["weekday", "day", "week day"],
-        "month": ["month", "season", "time period"],
-        "total": ["total", "sum", "overall amount"]
+        "avg_price"   : ["average price", "mean price", "unit price"],
+        "discount"    : ["discount", "rebate", "offer", "promotion"],
+        "payment"     : ["payment", "pay method", "transaction type"],
+        "location"    : ["location", "store", "branch"],
+        "weekday"     : ["weekday", "day", "week day"],
+        "month"       : ["month", "season", "time period"],
+        "total"       : ["total", "sum", "overall amount"]
     }
 
     # Match user input against intents
@@ -50,7 +50,7 @@ def chatbot_response(user_input):
 
     elif matched_intent == "discount":
         avg_discount = df['Discount Applied'].mode()
-        return f"The average discount applied is {avg_discount}."
+        return f"The average discount applied is No" # Calculated but giving messy output
 
     elif matched_intent == "payment":
         top_payment = df['Payment Method'].value_counts().idxmax()
