@@ -35,7 +35,6 @@ month = months[month_name]
 weekday = weekdays[weekday_name]
 
 price_per_unit = st.number_input("Price Per Unit", min_value=0.0, value=5.0)
-quantity = st.number_input("Quantity", min_value=1, value=1)
 
 discount_applied_checkbox = st.checkbox("Discount Applied")
 discount_applied = 1 if discount_applied_checkbox else 0
@@ -48,7 +47,7 @@ input_data = {
     "month": month,
     "weekday": weekday,
     "Price Per Unit": price_per_unit,
-    "Quantity": quantity,
+    "Quantity": 4,
     "Discount Applied": discount_applied,
     "Item": "Unknown"
 }
