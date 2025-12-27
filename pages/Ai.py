@@ -1,40 +1,82 @@
 import streamlit as st
 import pandas as pd
-import google as genai
+from fuzzywuzzy import fuzz
 
-# Configure your API key (set as environment variable for safety)
-genai.configure(api_key="YOUR_GOOGLE_API_KEY")
+@st.cache_data
+def load_data():
+    return pd.read_csv("retail_store_sales.csv")
 
-st.title("Ask Questions About Retail Sales Data")
+df = load_data()
 
-# Load your dataset
-df = pd.read_csv("sales_data.csv")
+cat_cols = ['Category', 'Payment Method', 'Location', 'month', 'weekday']
+num_cols = ['Price Per Unit', 'Quantity', 'Discount Applied']
 
-st.write("Preview of your data:")
-st.dataframe(df.head())
+def chatbot_response(user_input):
+    user_input = user_input.lower()
 
-# User question
-user_question = st.text_area("Ask a question about the data:")
+    # Define intents with fuzzy keywords
+    intents = {
+        "top_category": ["top category", "best category", "popular category"],
+        "avg_price": ["average price", "mean price", "unit price"],
+        "discount": ["discount", "rebate", "offer", "promotion"],
+        "payment": ["payment", "pay method", "transaction type"],
+        "location": ["location", "store", "branch"],
+        "weekday": ["weekday", "day", "week day"],
+        "month": ["month", "season", "time period"],
+        "total": ["total", "sum", "overall amount"]
+    }
 
-if st.button("Get Answer") and user_question:
-    # Summarize data context
-    data_summary = df.describe(include="all").to_string()
+    # Match user input against intents
+    matched_intent = None
+    for intent, keywords in intents.items():
+        for kw in keywords:
+            if fuzz.partial_ratio(user_input, kw) > 60:  # fuzzy threshold
+                matched_intent = intent
+                break
+        if matched_intent:
+            break
 
-    # Build prompt
-    prompt = f"""
-    You are an AI assistant. Here is a dataset summary:
-    {data_summary}
+    # Respond based on matched intent
+    if matched_intent == "top_category":
+        top_cat = df['Category'].value_counts().idxmax()
+        return f"The top-selling category is {top_cat}."
 
-    User question: {user_question}
-    Please answer clearly and concisely.
-    """
+    elif matched_intent == "avg_price":
+        avg_price = df['Price Per Unit'].mean()
+        return f"The average price per unit is {avg_price:.2f}."
 
-    # Create model
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    elif matched_intent == "discount":
+        avg_discount = df['Discount Applied'].mean()
+        return f"The average discount applied is {avg_discount:.2f}%."
 
-    # Generate response
-    response = model.generate_content(prompt)
+    elif matched_intent == "payment":
+        top_payment = df['Payment Method'].value_counts().idxmax()
+        return f"The most common payment method is {top_payment}."
 
-    st.write("Answer:")
-    st.write(response.text)
+    elif matched_intent == "location":
+        top_location = df['Location'].value_counts().idxmax()
+        return f"The busiest location is {top_location}."
+
+    elif matched_intent == "weekday":
+        top_day = df['weekday'].value_counts().idxmax()
+        return f"Most sales happen on {top_day}."
+
+    elif matched_intent == "month":
+        top_month = df['month'].value_counts().idxmax()
+        return f"The highest sales occur in {top_month}."
+
+    elif matched_intent == "total":
+        df['Total'] = df['Price Per Unit'] * df['Quantity']
+        total_sales = df['Total'].sum()
+        return f"The total sales amount is {total_sales:.2f}."
+
+    return "I can answer questions about category, price, discount, payment, location, weekday, month, or total."
+
+st.title("Retail Sales Chatbot")
+
+user_input = st.text_input("You:", "")
+if user_input:
+    response = chatbot_response(user_input)
+    st.write("Answer:", response)
+
 
