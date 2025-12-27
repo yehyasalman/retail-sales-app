@@ -1,61 +1,80 @@
 import streamlit as st
 import pandas as pd
+from fuzzywuzzy import fuzz
 
-st.title("Rule-Based Chatbot for Retail Sales Data")
+@st.cache_data
+def load_data():
+    return pd.read_csv("retail_store_sales.csv")
 
-# 1. Load dataset (or use placeholder if missing)
-try:
-    df = pd.read_csv("retail_store_sales.csv")
-    st.write("Preview of your data:")
-    st.dataframe(df.head())
-    context = df.describe(include="all").to_string()
-except Exception:
-    st.warning("Dataset not found. Using placeholder context.")
-    df = None
-    context = "Placeholder dataset summary goes here."
+df = load_data()
 
-# 2. Chat interface
-user_question = st.text_area("Ask a question about the data:")
+cat_cols = ['Category', 'Payment Method', 'Location', 'month', 'weekday']
+num_cols = ['Price Per Unit', 'Quantity', 'Discount Applied']
 
-if st.button("Get Answer") and user_question:
-    answer = "Sorry, I don't understand that question."
+def chatbot_response(user_input):
+    user_input = user_input.lower()
 
-    # 3. Rule-based responses
-    q = user_question.lower()
+    # Define intents with fuzzy keywords
+    intents = {
+        "top_category": ["top category", "best category", "popular category"],
+        "avg_price": ["average price", "mean price", "unit price"],
+        "discount": ["discount", "rebate", "offer", "promotion"],
+        "payment": ["payment", "pay method", "transaction type"],
+        "location": ["location", "store", "branch"],
+        "weekday": ["weekday", "day", "week day"],
+        "month": ["month", "season", "time period"],
+        "total": ["total", "sum", "overall amount"]
+    }
 
-    if "total sales" in q:
-        if df is not None:
-            total_sales = df["Total Spent"].sum()
-            answer = f"The total sales are {total_sales}."
-        else:
-            answer = "Dataset not available to calculate total sales."
+    # Match user input against intents
+    matched_intent = None
+    for intent, keywords in intents.items():
+        for kw in keywords:
+            if fuzz.partial_ratio(user_input, kw) > 80:  # fuzzy threshold
+                matched_intent = intent
+                break
+        if matched_intent:
+            break
 
-    elif "average sales" in q or "mean sales" in q:
-        if df is not None:
-            avg_sales = df["Total Spent"].mean()
-            answer = f"The average sales are {avg_sales:.2f}."
-        else:
-            answer = "Dataset not available to calculate average sales."
+    # Respond based on matched intent
+    if matched_intent == "top_category":
+        top_cat = df['Category'].value_counts().idxmax()
+        return f"The top-selling category is {top_cat}."
 
-    elif "highest sales" in q or "max sales" in q:
-        if df is not None:
-            max_sales = df["Total Spent"].max()
-            answer = f"The highest sales value is {max_sales}."
-        else:
-            answer = "Dataset not available to calculate highest sales."
+    elif matched_intent == "avg_price":
+        avg_price = df['Price Per Unit'].mean()
+        return f"The average price per unit is {avg_price:.2f}."
 
-    elif "lowest sales" in q or "min sales" in q:
-        if df is not None:
-            min_sales = df["Total Spent"].min()
-            answer = f"The lowest sales value is {min_sales}."
-        else:
-            answer = "Dataset not available to calculate lowest sales."
+    elif matched_intent == "discount":
+        avg_discount = df['Discount Applied'].mean()
+        return f"The average discount applied is {avg_discount:.2f}%."
 
-    elif "describe" in q or "summary" in q:
-        answer = f"Here is a dataset summary:\n{context}"
+    elif matched_intent == "payment":
+        top_payment = df['Payment Method'].value_counts().idxmax()
+        return f"The most common payment method is {top_payment}."
 
-    # 4. Display answer
-    st.write("Answer:")
-    st.write(answer)
+    elif matched_intent == "location":
+        top_location = df['Location'].value_counts().idxmax()
+        return f"The busiest location is {top_location}."
 
+    elif matched_intent == "weekday":
+        top_day = df['weekday'].value_counts().idxmax()
+        return f"Most sales happen on {top_day}."
 
+    elif matched_intent == "month":
+        top_month = df['month'].value_counts().idxmax()
+        return f"The highest sales occur in {top_month}."
+
+    elif matched_intent == "total":
+        df['Total'] = df['Price Per Unit'] * df['Quantity']
+        total_sales = df['Total'].sum()
+        return f"The total sales amount is {total_sales:.2f}."
+
+    return "I can answer questions about category, price, discount, payment, location, weekday, month, or total."
+
+st.title("Retail Sales Chatbot (Fuzzy")
+
+user_input = st.text_input("You:", "")
+if user_input:
+    response = chatbot_response(user_input)
+    st.write("🤖 Bot:", response)
