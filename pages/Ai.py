@@ -59,8 +59,3 @@ if st.button("Get Answer") and user_question:
     st.write(answer)
 
 
-    # 5. Display answer
-    st.write("Answer:")
-    st.write(response.text)
-
-
