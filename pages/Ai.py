@@ -1,5 +1,5 @@
 import streamlit as st
-import google.generativeai as genai
+import google-generativeai as genai
 import pandas as pd
 
 # 1. API Configuration
@@ -62,5 +62,6 @@ if prompt := st.chat_input("Ask something..."):
         "role": "model", 
         "parts": [{"text": full_response}]
     })
+
 
 
