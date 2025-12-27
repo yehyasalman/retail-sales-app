@@ -25,28 +25,28 @@ if st.button("Get Answer") and user_question:
 
     if "total sales" in q:
         if df is not None:
-            total_sales = df["sales"].sum()
+            total_sales = df["Total Spent"].sum()
             answer = f"The total sales are {total_sales}."
         else:
             answer = "Dataset not available to calculate total sales."
 
     elif "average sales" in q or "mean sales" in q:
         if df is not None:
-            avg_sales = df["sales"].mean()
+            avg_sales = df["Total Spent"].mean()
             answer = f"The average sales are {avg_sales:.2f}."
         else:
             answer = "Dataset not available to calculate average sales."
 
     elif "highest sales" in q or "max sales" in q:
         if df is not None:
-            max_sales = df["sales"].max()
+            max_sales = df["Total Spent"].max()
             answer = f"The highest sales value is {max_sales}."
         else:
             answer = "Dataset not available to calculate highest sales."
 
     elif "lowest sales" in q or "min sales" in q:
         if df is not None:
-            min_sales = df["sales"].min()
+            min_sales = df["Total Spent"].min()
             answer = f"The lowest sales value is {min_sales}."
         else:
             answer = "Dataset not available to calculate lowest sales."
@@ -62,4 +62,5 @@ if st.button("Get Answer") and user_question:
     # 5. Display answer
     st.write("Answer:")
     st.write(response.text)
+
 
