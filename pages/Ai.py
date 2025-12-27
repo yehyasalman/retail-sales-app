@@ -56,15 +56,10 @@ if prompt := st.chat_input("Ask something..."):
             model="gemini-2.0-flash",
             contents=st.session_state.messages,
         )
-
-        for chunk in stream:
-            full_response += chunk.text
-            response_placeholder.markdown(full_response)
-        
-        response_placeholder.markdown(full_response)
     
     # Save the assistant response
     st.session_state.messages.append({
         "role": "model", 
         "parts": [{"text": full_response}]
     })
+
