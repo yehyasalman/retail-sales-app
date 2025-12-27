@@ -1,14 +1,11 @@
 import streamlit as st
-import google-generativeai as genai
+import google.generativeai as genai
 import pandas as pd
 
 # 1. API Configuration
 # Note: In a real project, use st.secrets for your API key!
 API_KEY = "AIzaSyAORjfxuka1FCEgZlxMyG0HDIytesPyoqw"
 client = genai.Client(api_key=API_KEY)
-
-import streamlit as st
-from google import genai
 
 innovators_academy_info = pd.read_csv("retail_store_sales.csv")
 
@@ -62,6 +59,7 @@ if prompt := st.chat_input("Ask something..."):
         "role": "model", 
         "parts": [{"text": full_response}]
     })
+
 
 
 
