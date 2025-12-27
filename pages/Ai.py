@@ -72,9 +72,10 @@ def chatbot_response(user_input):
 
     return "I can answer questions about category, price, discount, payment, location, weekday, month, or total."
 
-st.title("Retail Sales Chatbot (Fuzzy")
+st.title("Retail Sales Chatbot")
 
 user_input = st.text_input("You:", "")
 if user_input:
     response = chatbot_response(user_input)
     st.write("🤖 Bot:", response)
+
