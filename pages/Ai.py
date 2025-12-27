@@ -30,7 +30,7 @@ def chatbot_response(user_input):
     matched_intent = None
     for intent, keywords in intents.items():
         for kw in keywords:
-            if fuzz.partial_ratio(user_input, kw) > 80:  # fuzzy threshold
+            if fuzz.partial_ratio(user_input, kw) > 60:  # fuzzy threshold
                 matched_intent = intent
                 break
         if matched_intent:
@@ -77,5 +77,6 @@ st.title("Retail Sales Chatbot")
 user_input = st.text_input("You:", "")
 if user_input:
     response = chatbot_response(user_input)
-    st.write("🤖 Bot:", response)
+    st.write("Answer:", response)
+
 
