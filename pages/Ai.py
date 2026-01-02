@@ -33,7 +33,7 @@ def chatbot_response(user_input):
     matched_intent = None
     for intent, keywords in intents.items():
         for kw in keywords:
-            if fuzz.partial_ratio(user_input, kw) > 60:  # fuzzy threshold
+            if fuzz.partial_ratio(user_input, kw) > 70:  # fuzzy threshold
                 matched_intent = intent
                 break
         if matched_intent:
