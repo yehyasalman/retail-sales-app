@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 
 # Load trained model
-with open("Models/retail_sales_model_fixed.pkl", "rb") as f:
+with open("retail_sales_model_fixed.pkl", "rb") as f:
     model = pickle.load(f)
 
 st.title("Retail Store Sales Prediction")
